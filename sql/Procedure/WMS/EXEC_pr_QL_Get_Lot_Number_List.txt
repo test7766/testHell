@@ -1,0 +1,16 @@
+USE [WMS]
+GO
+
+DECLARE	@return_value int
+
+EXEC	@return_value = [dbo].[pr_QL_Get_Lot_Number_List]
+		@Session_ID = 16567557,
+		@Item_ID = 132,
+		@Lot_Number = NULL,
+		@Vendor_Lot = NULL,
+		@Warehouse_ID = NULL,
+		@AllRemains = false
+
+SELECT	'Return Value' = @return_value
+
+GO

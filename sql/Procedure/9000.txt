@@ -1,0 +1,17 @@
+USE [jde_prod]
+GO
+
+DECLARE	@RC		int
+DECLARE	@ITM	int
+DECLARE	@MCU	char (12)
+DECLARE	@LOCN	char(20)
+DECLARE	@LOTN	char(30)
+
+		
+
+EXECUTE @RC = [plrs].[pr_GetItemLedger]
+		@ITM = 158,
+		@MCU =  "       01LA1",
+		@LOCN = "EXP ED",
+		@LOTN = '202307111662'
+GO

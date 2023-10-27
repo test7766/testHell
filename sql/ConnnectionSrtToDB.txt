@@ -1,0 +1,43 @@
+pishnyak@optimapharm.ua
+
+
+
+__________________________________________________________
+mssql-Line
+
+Server=localhost;Database=master;Trusted_Connection=True;
+
+-------------------------------------------------------------
+Data Source=(localdb)\MSSQLLocalDB;Integrated Security=True;Persist Security Info=False;Pooling=False;Multiple Active Result Sets=False;Encrypt=False;Trust Server Certificate=False;Command Timeout=0
+
+
+Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=test1;Integrated Security=True;Connect Timeout=60;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False
+
+------------------------------------------------------------localdb_connect_work_version!!!!!!!!!!!!!-----------------------------------------------------------------
+"Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=test1;Integrated Security=True;Connect Timeout=60;Encrypt=False;"
+
+
+-----------docker-mssql-----------------------------------------------------------------------------------
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=yourStrong(!)Password" -e "MSSQL_PID=Evaluation" -p 1433:1433  --name sqlpreview --hostname sqlpreview -d mcr.microsoft.com/mssql/server:2022-preview-ubuntu-22.04
+
+_________________________________create_docker_container______with___________________________________________________________________________
+1) reate a Docker Network (Optional but Recommended): It's a good practice to create a Docker network to ensure communication between containers is easy and consistent. Run the following command to create a network:
+docker network create sql_network
+2)Run SQL Server Container with SQL and Windows Authentication:
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=123!@#QWEqwe" -e "MSSQL_PID=Evaluation" -p 1433:1433 --name sqlpreview --hostname sqlpreview --network sql_network -d mcr.microsoft.com/mssql/server:2022-preview-ubuntu-22.04
+
+
+
+____ВАРИАНТ С АУТЕНТИфиКАЦИЕЙ sql/windows(не работает)__________________
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=123!@#QWEqwe" -e "MSSQL_PID=Evaluation" -e "MSSQL_AUTHENTICATION=sql+windows" -p 1433:1433 --name sqlpreview --hostname sqlpreview --network sql_network -d mcr.microsoft.com/mssql/server:2022-preview-ubuntu-22.04
+
+
+
+
+Data Source=DESKTOP-ESCI621;Initial Catalog=MinimalApiUserDB;Integrated Security=True;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
+
+
+
+
+-------------------------------------------Строка подключения DOCKER+MSSQL+LOGIN+PASSWODR---------------+Полноценная работа с данними CRUD-Operations---------------------------------------------------------------------
+Data Source=localhost,1433;Initial Catalog=MinimalApiUserDB;  User Id=sa; Password=123!@#QWEqwe;    Integrated Security=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False

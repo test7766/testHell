@@ -1,0 +1,12 @@
+USE [WMS]
+GO
+
+DECLARE	@return_value int
+
+EXEC	@return_value = [dbo].[pr_QL_Search_Items]
+		@Session_ID = 16567557,
+		@Item_Name = N'гліц'
+
+SELECT	'Return Value' = @return_value
+
+GO

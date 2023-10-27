@@ -1,0 +1,72 @@
+USE [jde_prod]
+GO
+/****** Object:  StoredProcedure [plrs].[pr_GetItemLedger]    Script Date: 04.09.2023 09:42:43 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:           Maydanik
+-- Create date: 2023-08-31
+-- Description:      Движение по товару
+-- =============================================
+--exec  plrs.pr_GetItemLedger 5886, '       01LA1', null, '202308102497'
+ALTER   PROCEDURE [plrs].[pr_GetItemLedger] @ITM int,  @MCU char (12), @LOCN char (20) = null, @LOTN char (30)  = null
+AS
+BEGIN
+
+       SET NOCOUNT ON;
+
+if @LOCN is null and @LOTN is null 
+begin 
+
+RAISERROR ('Або місце або партія повинні бути вказані!', -- Message text.
+               16, -- Severity.
+               1 -- State.
+               );
+return;
+
+end 
+
+
+select 
+Document_Number = ildoc, --Номер документу
+Doc_Type      = ildct, --Тип документу
+Doc_Co = ilkco, --Компанія документу
+Transaction_Date     = dbo.fn_Jul2DT (iltrdj), --Дата операції
+Branch_Plant  = ilmcu , --Код складу
+Quantity      = iltrqt, --Кількість
+Trans_UoM     = iltrum , --Од. виміру
+Unit_Cost     = iluncs/10000, --Вартість, грн
+Extended_Cost = ilpaid/100, --Сума, грн
+Lot_Serial    = illotn, --Партія
+[Location]    = illocn, --Місце
+Lot_Status_Code      = illots,    --Код статусу партії
+Order_Number  = ildoco, --Номер замовлення
+Order_Ty      = ildcto, --Тип замовлення
+Order_Co      = ilkcoo, --Компанія замовлення
+LineNum  = illnid , --Номер рядка
+Class_Code    = ildgl, --Клас ГК
+GL_Date       = dbo.fn_Jul2DT (ildgl),--Дата ГК
+Supplier_Lot_Number = iorlot , --Серія
+Trex = ILTREX , --Опис операції
+FT =  ILFRTO --З/На
+
+--Standart
+--from jde_prod.optmdta.f4111 with (nolock)
+--left join jde_prod.optmdta.f4108 with (nolock) on iomcu = ilmcu and ioitm = ilitm and iolotn = illotn 
+--where ilmcu = @mcu and ilitm = @itm and illocn = isnull (@LOCN, illocn) and illotn = isnull (@lotn, illotn )
+--для @LOCN 
+--from jde_prod.optmdta.f4111 with (nolock)
+--left join jde_prod.optmdta.f4108 with (nolock) on iomcu = ilmcu and ioitm = ilitm and iolotn = illotn 
+--where REPLACE(illocn, ' ', '') = REPLACE(@LOCN, ' ', '') and ilitm = @itm and illotn = isnull(@lotn, illotn)
+
+from jde_prod.optmdta.f4111 with (nolock)
+left join jde_prod.optmdta.f4108 with (nolock) on iomcu = ilmcu and ioitm = ilitm and iolotn = illotn 
+where REPLACE(ilitm, ' ', '') = REPLACE(@itm, ' ', '') and REPLACE(illocn, ' ', '') = REPLACE(@LOCN, ' ', '') and illotn = isnull(@lotn, illotn)
+
+
+
+
+
+END
