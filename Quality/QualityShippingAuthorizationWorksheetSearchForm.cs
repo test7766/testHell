@@ -279,7 +279,40 @@ namespace WMSOffice.Dialogs.Quality
             if (this.DialogResult == DialogResult.OK)
                 e.Cancel = !this.SaveData();
         }
+      ///          searchSheetsParams.OnlyActual = form.FilterOnlyActive;  <summary>
+            ///          searchSheetsParams.OnlyActual = form.FilterOnlyActive; 
+            /// </summary>
+            /// <returns></returns>        //        searchSheetsParams.ItemID = form.FilterItemID;                                            stbItem
+         //       searchSheetsParams.ItemName = form.ItemName;
+        //        searchSheetsParams.VendorID = form.FilterVendorID;                                        stbVendor
+         //       searchSheetsParams.VendorName = form.VendorName;
+      //          searchSheetsParams.ManufacturerID = form.FilterManufacturerID;                            chbManufacturer
+      //          searchSheetsParams.ManufacturerName = form.ManufacturerName;
+        //        searchParams.OrderID = form.FilterOrderID;
 
+      //          searchSheetsParams.IncludeNew = form.FilterIncludeNew;
+    //            searchSheetsParams.IncludeInWork = form.FilterIncludeInWork;
+    //            searchSheetsParams.IncludeAccepted = form.FilterIncludeAccepted;
+     //           searchSheetsParams.IncludeNotAccepted = form.FilterIncludeNotAccepted;
+       //         searchSheetsParams.IncludeCertDataInput = form.FilterIncludeCertDataInput;
+
+        //        searchSheetsParams.OrderIncludeNew = form.FilterOrderIncludeNew;
+         //       searchSheetsParams.OrderIncludeInWork = form.FilterOrderIncludeInWork;
+       //         searchSheetsParams.OrderIncludeAccepted = form.FilterOrderIncludeAccepted;
+        //        searchSheetsParams.OrderIncludeNotAccepted = form.FilterOrderIncludeNotAccepted;
+        //        searchSheetsParams.OrderIncludeCertDataInput = form.FilterOrderIncludeCertDataInput;
+
+
+       //         searchSheetsParams.ProvisorID = form.FilterProvisorID;                                    cmbProvisors
+       
+
+       //        searchSheetsParams.OrderDateFrom = form.FilterOrderDateFrom;                               dtpOrderDateFrom
+       //        searchSheetsParams.OrderDateTo = form.FilterOrderDateTo;                                  dtpOrderDateTo
+
+       //         searchSheetsParams.DateFrom = form.FilterWorksheetDateFrom;                               chbWorksheetDate
+        //        searchSheetsParams.DateTo = form.FilterWorksheetDateTo;
+        
+        
         private bool SaveData()
         {
             try

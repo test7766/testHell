@@ -126,7 +126,6 @@
             this.chbOrderCertDataInput.TabIndex = 15;
             this.chbOrderCertDataInput.Text = "Ввод данных сертификата";
             this.chbOrderCertDataInput.UseVisualStyleBackColor = true;
-            this.chbOrderCertDataInput.Visible = false;
             this.chbOrderCertDataInput.CheckedChanged += new System.EventHandler(this.chbOrderStatus_CheckedChanged);
             // 
             // chbOrderNotAccepted
@@ -534,11 +533,11 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.CheckBox chbOrderCertDataInput;
         private System.Windows.Forms.CheckBox chbOrderNotAccepted;
         private System.Windows.Forms.CheckBox chbOrderInWork;
         private System.Windows.Forms.CheckBox chbOrderAccepted;
         private System.Windows.Forms.CheckBox chbOrderNew;
+        public System.Windows.Forms.CheckBox chbOrderCertDataInput;
 
     }
 }

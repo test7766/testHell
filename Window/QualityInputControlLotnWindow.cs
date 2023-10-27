@@ -50,7 +50,6 @@ namespace WMSOffice.Window
         {
             InitializeComponent();
 
-
             edgOrders.AllowSummary = false;
             edgOrders.UseMultiSelectMode = false;
             edgOrders.Init(new InputControlLotnView(), true);
@@ -62,25 +61,35 @@ namespace WMSOffice.Window
             edgWorksheets.Init(new InputControlLotnWorksheetsView(), true);
             edgWorksheets.UserID = this.UserID;
 
-            
-          
-
-
-
+  
             // активация постраничного просмотра
             edgOrders.CreatePageNavigator();
 
-
-
-            //InitializeInputControlLotnGrid();                   //инициализация верхнего грида edgOrders
-            //InitializeInputControlLotnWorksheetsGrid();         //инициализация нижнего грида edgWorksheets
 
             spReportProvider = new QualityInputControlReportProvider(UserID)
             {
                 ControlType = InputControlTypes.LotnControl
             };
+        }
 
 
+
+        //cashe checkbox order
+        private void chbOrderStatus_CheckedChanged(object sender, EventArgs e)
+        {
+
+            var chbStatusSelector = sender as CheckBox;
+
+            if (chbStatusSelector.Equals(chbOrderNew))
+                InputControlLotnSearchQuestionnaires.SearchParameter.OrderIncludeNew = chbOrderNew.Checked;
+            else if (chbStatusSelector.Equals(chbOrderInWork))
+                InputControlLotnSearchQuestionnaires.SearchParameter.OrderIncludeInWork = chbOrderInWork.Checked;
+            else if (chbStatusSelector.Equals(chbOrderAccepted))
+                InputControlLotnSearchQuestionnaires.SearchParameter.OrderIncludeAccepted = chbOrderAccepted.Checked;
+            else if (chbStatusSelector.Equals(chbOrderNotAccepted))
+                InputControlLotnSearchQuestionnaires.SearchParameter.OrderIncludeNotAccepted = chbOrderNotAccepted.Checked;
+            else if (chbStatusSelector.Equals(chbOrderCertDataInput))
+                InputControlLotnSearchQuestionnaires.SearchParameter.OrderIncludeCertDataInput = chbOrderCertDataInput.Checked;
 
         }
 
@@ -98,13 +107,14 @@ namespace WMSOffice.Window
             PrintDocsThread.FillPrintersComboBox(cmbPrinters.ComboBox);
             //RefreshDocs();
             //edgWorksheets.LoadExtraDataGridViewSettings(ConfigDetailsName);
-            //   LoadData(null);
-
-
-
-
-
+       
         }
+
+
+     
+
+
+
 
         /// <summary>
         /// Отображение загруженных заказов в фильтруемом гриде
@@ -194,6 +204,25 @@ namespace WMSOffice.Window
 
 
 
+        private void LoadDataOrderCheckBoxesPanel()
+        {
+            var qicw = new InputControlLotnOrdersSearchParamters
+            {
+                SessionID = InputControlLotnSearchQuestionnaires.SearchParameter.SessionID,
+                OrderIncludeNew = InputControlLotnSearchQuestionnaires.SearchParameter.OrderIncludeNew,
+                OrderIncludeInWork = InputControlLotnSearchQuestionnaires.SearchParameter.OrderIncludeInWork,
+                OrderIncludeAccepted = InputControlLotnSearchQuestionnaires.SearchParameter.OrderIncludeAccepted,
+                OrderIncludeCertDataInput = InputControlLotnSearchQuestionnaires.SearchParameter.OrderIncludeCertDataInput
+            };
+        }
+
+
+
+        private void btnOrderSearch_Click(object sender, EventArgs e)
+        {
+            SearchQuestionnaires();
+        }
+
 
         private void SearchQuestionnaires()
         {
@@ -201,153 +230,39 @@ namespace WMSOffice.Window
             var dlgSearchForm = new InputControlLotnSearchQuestionnaires(searchSheetsParams) { UserID = this.UserID };
             if (dlgSearchForm.ShowDialog() == DialogResult.OK)
             {
-                chbStatusNew.Checked = QualityShippingAuthorizationWorksheetSearchForm.SearchParameter.StatusNew;
-                chbStatusInWork.Checked = QualityShippingAuthorizationWorksheetSearchForm.SearchParameter.StatusInWork;
-                chbStatusAccepted.Checked = QualityShippingAuthorizationWorksheetSearchForm.SearchParameter.StatusAccepted;
-                chbStatusNotAccepted.Checked = QualityShippingAuthorizationWorksheetSearchForm.SearchParameter.StatusNotAccepted;
 
-        //        this.LoadData(QualityShippingAuthorizationWorksheetSearchForm.SearchParameter);
+
+                chbOrderNew.Checked = searchSheetsParams.OrderIncludeNew;
+                chbOrderInWork.Checked = searchSheetsParams.OrderIncludeInWork;
+                chbOrderAccepted.Checked = searchSheetsParams.OrderIncludeAccepted;
+                chbOrderNotAccepted.Checked = searchSheetsParams.OrderIncludeNotAccepted;
+                chbOrderCertDataInput.Checked = searchSheetsParams.OrderIncludeCertDataInput;
+
+
+                LoadDataOrderCheckBoxesPanel();
+         //       this.LoadData(QualityShippingAuthorizationWorksheetSearchForm.SearchParameter);
             }
         }
 
 
 
 
+    
 
 
-
-
-        //Search
-
-        private void btnOrderSearch_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Заполнение значений в чекбоксах под панелью инструментов анкет входного контроля текущими значениями фильтров
+        /// </summary>
+        private void CustomSheetsCheckBoxesPanel()
         {
-             var formEork = new InputControlLotnSearchForm(searchSheetsParams);
-
-            //var form2 = new InputControlLotnSearchQuestionnaires(searchSheetsParams);
-
-
-
-
-
-
-
-
-            var form = new InputControlLotnSearchQuestionnaires(searchSheetsParams);
-            if (form.ShowDialog(this) == DialogResult.OK)
-            {
-                searchSheetsParams.OnlyActual = form.FilterOnlyActive;
-                searchSheetsParams.ItemID = form.FilterItemID;
-                searchSheetsParams.ItemName = form.ItemName;
-                searchSheetsParams.VendorID = form.FilterVendorID;
-                searchSheetsParams.VendorName = form.VendorName;
-                searchSheetsParams.ManufacturerID = form.FilterManufacturerID;
-                searchSheetsParams.ManufacturerName = form.ManufacturerName;
-                searchParams.OrderID = form.FilterOrderID;
-
-                searchSheetsParams.IncludeNew = form.FilterIncludeNew;
-                searchSheetsParams.IncludeInWork = form.FilterIncludeInWork;
-                searchSheetsParams.IncludeAccepted = form.FilterIncludeAccepted;
-                searchSheetsParams.IncludeNotAccepted = form.FilterIncludeNotAccepted;
-                searchSheetsParams.IncludeCertDataInput = form.FilterIncludeCertDataInput;
-
-                searchSheetsParams.OrderIncludeNew = form.FilterOrderIncludeNew;
-                searchSheetsParams.OrderIncludeInWork = form.FilterOrderIncludeInWork;
-                searchSheetsParams.OrderIncludeAccepted = form.FilterOrderIncludeAccepted;
-                searchSheetsParams.OrderIncludeNotAccepted = form.FilterOrderIncludeNotAccepted;
-                searchSheetsParams.OrderIncludeCertDataInput = form.FilterOrderIncludeCertDataInput;
-
-                searchSheetsParams.OrderDateFrom = form.FilterOrderDateFrom;
-                searchSheetsParams.OrderDateTo = form.FilterOrderDateTo;
-                searchSheetsParams.ProvisorID = form.FilterProvisorID;
-                searchSheetsParams.DateFrom = form.FilterWorksheetDateFrom;
-                searchSheetsParams.DateTo = form.FilterWorksheetDateTo;
-
-                CustomSheetsCheckBoxesPanel();
-
-                if (searchSheetsParams.OrderID.HasValue)
-                {
-                    RefreshDocs(searchParams.OrderID);
-
-                    //edgOrders.ApplyFilter(InputControlLotnView.ID_PROPERTY_NAME, searchSheetsParams.OrderID.ToString());
-                    //edgOrders.ActivateFilter();
-                }
-                else
-                {
-                    //CustomSheetsCheckBoxesPanel();
-                    //if (!chbDetailsSearchMode.Checked)
-                    //    chbDetailsSearchMode.Checked = true;
-
-                    RefreshDetails();
-                }
-            }
-
-
-
-
-
-
-            //var form = new InputControlLotnSearchForm(searchSheetsParams);
-            //if (form.ShowDialog(this) == DialogResult.OK)
-            //{
-            //    searchSheetsParams.OnlyActual = form.FilterOnlyActive;
-            //    searchSheetsParams.ItemID = form.FilterItemID;
-            //    searchSheetsParams.ItemName = form.ItemName;
-            //    searchSheetsParams.VendorID = form.FilterVendorID;
-            //    searchSheetsParams.VendorName = form.VendorName;
-            //    searchSheetsParams.ManufacturerID = form.FilterManufacturerID;
-            //    searchSheetsParams.ManufacturerName = form.ManufacturerName;
-            //    searchParams.OrderID = form.FilterOrderID;
-
-            //    searchSheetsParams.IncludeNew = form.FilterIncludeNew;
-            //    searchSheetsParams.IncludeInWork = form.FilterIncludeInWork;
-            //    searchSheetsParams.IncludeAccepted = form.FilterIncludeAccepted;
-            //    searchSheetsParams.IncludeNotAccepted = form.FilterIncludeNotAccepted;
-            //    searchSheetsParams.IncludeCertDataInput = form.FilterIncludeCertDataInput;
-
-            //    searchSheetsParams.OrderIncludeNew = form.FilterOrderIncludeNew;
-            //    searchSheetsParams.OrderIncludeInWork = form.FilterOrderIncludeInWork;
-            //    searchSheetsParams.OrderIncludeAccepted = form.FilterOrderIncludeAccepted;
-            //    searchSheetsParams.OrderIncludeNotAccepted = form.FilterOrderIncludeNotAccepted;
-            //    searchSheetsParams.OrderIncludeCertDataInput = form.FilterOrderIncludeCertDataInput;
-
-            //    searchSheetsParams.OrderDateFrom = form.FilterOrderDateFrom;
-            //    searchSheetsParams.OrderDateTo = form.FilterOrderDateTo;
-            //    searchSheetsParams.ProvisorID = form.FilterProvisorID;
-            //    searchSheetsParams.DateFrom = form.FilterWorksheetDateFrom;
-            //    searchSheetsParams.DateTo = form.FilterWorksheetDateTo;
-
-            //    CustomSheetsCheckBoxesPanel();
-
-            //    if (searchSheetsParams.OrderID.HasValue)
-            //    {
-            //        RefreshDocs(searchParams.OrderID);
-
-            //        //edgOrders.ApplyFilter(InputControlLotnView.ID_PROPERTY_NAME, searchSheetsParams.OrderID.ToString());
-            //        //edgOrders.ActivateFilter();
-            //    }
-            //    else
-            //    {
-            //        //CustomSheetsCheckBoxesPanel();
-            //        //if (!chbDetailsSearchMode.Checked)
-            //        //    chbDetailsSearchMode.Checked = true;
-
-            //        RefreshDetails();
-            //    }
-            //}
-
-
-
-
-
+            needRefreshParams = false;
+            chbOrderNew.Checked = searchSheetsParams.OrderIncludeNew;
+            chbOrderInWork.Checked = searchSheetsParams.OrderIncludeInWork;
+            chbOrderAccepted.Checked = searchSheetsParams.OrderIncludeAccepted;
+            chbOrderNotAccepted.Checked = searchSheetsParams.OrderIncludeNotAccepted;
+            chbOrderCertDataInput.Checked = searchSheetsParams.OrderIncludeCertDataInput;
+            needRefreshParams = true;
         }
-
-
-
-
-
-
-
-
 
 
 
@@ -565,17 +480,12 @@ namespace WMSOffice.Window
             chbOrderCertDataInput.Checked = searchParams.IncludeCertDataInput;
         }
 
-        /// <summary>
-        /// Изменение фильтров по статусах заказов при переключении соответствующих флажков
-        /// </summary>
-        private void chbOrderStatus_CheckedChanged(object sender, EventArgs e)
-        {
-            searchParams.IncludeNew = chbOrderNew.Checked;
-            searchParams.IncludeInWork = chbOrderInWork.Checked;
-            searchParams.IncludeAccepted = chbOrderAccepted.Checked;
-            searchParams.IncludeNotAccepted = chbOrderNotAccepted.Checked;
-            searchParams.IncludeCertDataInput = chbOrderCertDataInput.Checked;
-        }
+
+
+
+  
+
+
 
         /// <summary>
         /// Разрисовка строк в таблице заказов
@@ -665,11 +575,6 @@ namespace WMSOffice.Window
 
             LoadDataedgWorksheets();
 
-            //bgwWsLoader = new BackgroundWorker();
-            //bgwWsLoader.DoWork += bgwWsLoader_DoWork;
-            //bgwWsLoader.RunWorkerCompleted += bgwWsLoader_RunWorkerCompleted;
-            //bgwWsLoader.RunWorkerAsync();
-
         }
 
 
@@ -710,47 +615,7 @@ namespace WMSOffice.Window
                 {
                     try
                     {
-
                         this.edgWorksheets.DataView.FillData(e.Argument as InputControlLotnWorkSheetsSearchParamters);
-
-
-
-
-
-
-
-
-
-
-                        //using (var adapter = new AT_Doc_VersionsTableAdapter())
-                        //{
-                        //    adapter.SetTimeout(300);
-
-                        //    e.Result = adapter.GetData(
-                        //    searchSheetsParams.SessionID,
-                        //    searchSheetsParams.OrderID,//detailsSearchMode ? null : searchSheetsParams.OrderID,
-                        //    searchSheetsParams.FilterByStatus,
-                        //    detailsSearchMode ? (bool?)searchSheetsParams.OnlyActual : null,
-                        //    detailsSearchMode ? searchSheetsParams.ItemID : null,
-                        //    detailsSearchMode ? searchSheetsParams.LotNumber : null,
-                        //    detailsSearchMode ? searchSheetsParams.VendorID : null,
-                        //    detailsSearchMode ? searchSheetsParams.ManufacturerID : null,
-
-                        //    detailsSearchMode ? "1,2,3,4,5" : null,
-
-                        //    detailsSearchMode ? (searchSheetsParams.OrderDateFrom.HasValue ?
-                        //        (DateTime?)searchSheetsParams.OrderDateFrom.Value.Date : null) : null,
-                        //    detailsSearchMode ? (searchSheetsParams.OrderDateTo.HasValue ?
-                        //        (DateTime?)searchSheetsParams.OrderDateTo.Value.Date.AddDays(1).AddMinutes(-1) : null) : null,
-                        //    detailsSearchMode ? searchSheetsParams.ProvisorID : null,
-                        //    detailsSearchMode ? (searchSheetsParams.DateFrom.HasValue ?
-                        //        (DateTime?)searchSheetsParams.DateFrom.Value.Date : null) : null,
-                        //    detailsSearchMode ? (searchSheetsParams.DateTo.HasValue ?
-                        //        (DateTime?)searchSheetsParams.DateTo.Value.Date.AddDays(1).AddMinutes(-1) : null) : null);
-
-
-                        //    //   RefreshWsDataViewBinding(e.Result as Quality.AT_Doc_VersionsDataTable);
-                        //}
 
                     }
                     catch (Exception ex)
@@ -893,20 +758,6 @@ namespace WMSOffice.Window
 
 
 
-
-        /// <summary>
-        /// Заполнение значений в чекбоксах под панелью инструментов анкет входного контроля текущими значениями фильтров
-        /// </summary>
-        private void CustomSheetsCheckBoxesPanel()
-        {
-            needRefreshParams = false;
-            chbSheetNew.Checked = searchSheetsParams.IncludeNew;
-            chbSheetInWork.Checked = searchSheetsParams.IncludeInWork;
-            chbSheetAccepted.Checked = searchSheetsParams.IncludeAccepted;
-            chbSheetNotAccepted.Checked = searchSheetsParams.IncludeNotAccepted;
-            chbSheetCertDataInput.Checked = searchSheetsParams.IncludeCertDataInput;
-            needRefreshParams = true;
-        }
 
         /// <summary>
         /// Изменение фильтров по статусах анкет при переключении соответствующих флажков
